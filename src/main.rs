@@ -71,11 +71,29 @@ fn fact(n: u64) -> BigInt {
     }
     result
 }
+
+fn rec_fact(n: u64) -> BigInt {
+    let bigint = n.to_bigint().unwrap();
+    match n {
+        1 => bigint,
+        _ => bigint * rec_fact(n-1)
+    }
+}
+
 fn time_fact(n: u64) {
     let start = time::precise_time_ns();
     let result = fact(n);
     let end = time::precise_time_ns();
     println!("Took {}ms\t to calculate {}! serially",
+             (end - start) / 1000000,
+             n);
+}
+
+fn time_rec_fact(n: u64) {
+    let start = time::precise_time_ns();
+    let result = rec_fact(n);
+    let end = time::precise_time_ns();
+    println!("Took {}ms\t to calculate {}! recursively",
              (end - start) / 1000000,
              n);
 }
@@ -94,6 +112,7 @@ fn main() {
     let iters = 100000;
     time_fact(iters);
     time_par_fact(iters, 4);
+    time_rec_fact(iters);
 }
 
 #[bench]
